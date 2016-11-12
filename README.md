@@ -1,5 +1,9 @@
 # Behat-Unit
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/beeblebrox3/testing-behat-unit/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/beeblebrox3/testing-behat-unit/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/beeblebrox3/testing-behat-unit/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/beeblebrox3/testing-behat-unit/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/beeblebrox3/testing-behat-unit/badges/build.png?b=master)](https://scrutinizer-ci.com/g/beeblebrox3/testing-behat-unit/build-status/master)
+
 > Este projeto é uma PoC, construído para testes e aprendizado. Não leve o código daqui muito a sério ;)
 
 ## Instalação e configuração
