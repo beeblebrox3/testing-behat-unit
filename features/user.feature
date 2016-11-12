@@ -8,7 +8,7 @@ Feature: User manipulation
     Then I show get the user with "name" "Luis"
     And the user must have "active" equals "1"
 
-  Scenario: Disable a user
+  Scenario: Disable an user
     Given that exists the user:
       | name | email                 | active |
       | Luis | luish.faria@gmail.com | 1      |
