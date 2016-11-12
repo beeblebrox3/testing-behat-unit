@@ -1,6 +1,6 @@
 <?php
+
 require dirname(dirname(__DIR__)) . "/paths.php";
-require dirname(dirname(__DIR__)) . "/app/database.php";
 
 use App\Service\UserBO;
 use Behat\Behat\Context\Context;
@@ -21,7 +21,7 @@ class FeatureContext implements Context
 
     private $userBO;
 
-    private $searchResult;
+    private $users = [];
 
     private $coverage;
 
@@ -36,9 +36,11 @@ class FeatureContext implements Context
     {
         $driver = new Xdebug();
         $filter = new Filter();
-        $filter->addDirectoryToWhitelist(ROOT . DS . "app");
+        $filter->addDirectoryToWhitelist(ROOT . DS . "app/App");
         $this->coverage = new CodeCoverage($driver, $filter);
         $this->coverage->start("test");
+
+        require dirname(dirname(__DIR__)) . "/app/database.php";
 
         $this->connection = Manager::connection();
         $this->userBO = new UserBO($this->connection);
@@ -69,18 +71,9 @@ class FeatureContext implements Context
     {
         $users = $table->getHash();
         foreach ($users as $user) {
-            $this->userBO->save($user);
+            $user = $this->userBO->save($user);
+            $this->users[$user->id] = $user;
         }
-    }
-
-    /**
-     * @Given /^search an user with "([^"]*)" "([^"]*)"$/
-     * @param string $arg1
-     * @param string $arg2
-     */
-    public function searchAnUserByWith(string $arg1, string $arg2)
-    {
-        $this->searchResult = $this->userBO->search([$arg1 => $arg2]);
     }
 
     /**
@@ -91,9 +84,9 @@ class FeatureContext implements Context
      */
     public function iShowGetTheUserWith(string $field, string $value)
     {
-        foreach ($this->searchResult as $result) {
-            if ($result->$field != $value) {
-                throw new LogicException("{$result->$field} different from $value");
+        foreach ($this->users as $user) {
+            if ($user->$field != $value) {
+                throw new LogicException("{$user->$field} different from $value");
             }
         }
     }
@@ -105,18 +98,6 @@ class FeatureContext implements Context
     public function iDisableTheUser(string $userName)
     {
         $user = $this->userBO->search(['name' => $userName])[0];
-        $this->userBO->disable($user->id);
-    }
-
-    /**
-     * @Then /^I user "([^"]*)" should be disabled$/
-     * @param string $userName
-     */
-    public function iUserShouldBeDisabled(string $userName)
-    {
-        $user = $this->userBO->search(['name' => $userName])[0];
-        if ($user->active != 0) {
-            throw new LogicException("USer $userName is not disabled");
-        }
+        $this->users[$user->id] = $this->userBO->disable($user->id);
     }
 }

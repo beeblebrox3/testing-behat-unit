@@ -24,9 +24,9 @@ class UserBO
     {
         $this->connection->beginTransaction();
         try {
-            $record = $this->table()->insert($data);
+            $recordId = $this->table()->insertGetId($data);
             $this->connection->commit();
-            return $record;
+            return $this->get($recordId);
         } catch (\Exception $e) {
             $this->connection->rollBack();
             throw $e;
@@ -56,10 +56,12 @@ class UserBO
     public function enable(int $id)
     {
         $this->table()->where('id', $id)->update(['active' => 1]);
+        return $this->get($id);
     }
 
     public function disable(int $id)
     {
         $this->table()->where('id', $id)->update(['active' => 0]);
+        return $this->get($id);
     }
 }
