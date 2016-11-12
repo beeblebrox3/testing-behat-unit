@@ -1,0 +1,13 @@
+language: php
+php:
+  - '7.0'
+services:
+  - mysql
+install:
+  - composer install
+before_script:
+  - sed -e 's/^\(host =\).*$/\1 "127.0.0.1"/' -e 's/^\(user =\).*$/\1 "root"/' -e 's/^\(name =\).*$/\1 "app"/' config.sample.ini > config.ini
+  - mysql -e "create database IF NOT EXISTS app;" -uroot
+  - php install.php
+script:
+  - ./vendor/bin/behat
