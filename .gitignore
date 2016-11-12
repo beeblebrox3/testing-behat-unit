@@ -2,3 +2,6 @@
 nbproject/
 vendor/
 config.ini
+code-coverage-report/
+coverage.xml
+coverage.txt

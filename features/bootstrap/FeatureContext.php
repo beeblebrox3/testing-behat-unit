@@ -4,10 +4,13 @@ require dirname(dirname(__DIR__)) . "/app/database.php";
 
 use App\Service\UserBO;
 use Behat\Behat\Context\Context;
-use Behat\Behat\Tester\Exception\PendingException;
-use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Illuminate\Database\Capsule\Manager;
+use SebastianBergmann\CodeCoverage\CodeCoverage;
+use SebastianBergmann\CodeCoverage\Driver\Xdebug;
+use SebastianBergmann\CodeCoverage\Filter;
+use SebastianBergmann\CodeCoverage\Report\Clover;
+use SebastianBergmann\CodeCoverage\Report\Html\Facade;
 
 /**
  * Defines application features from the specific context.
@@ -20,6 +23,8 @@ class FeatureContext implements Context
 
     private $searchResult;
 
+    private $coverage;
+
     /**
      * Initializes context.
      *
@@ -29,14 +34,30 @@ class FeatureContext implements Context
      */
     public function __construct()
     {
+        $driver = new Xdebug();
+        $filter = new Filter();
+        $filter->addDirectoryToWhitelist(ROOT . DS . "app");
+        $this->coverage = new CodeCoverage($driver, $filter);
+        $this->coverage->start("test");
+
         $this->connection = Manager::connection();
         $this->userBO = new UserBO($this->connection);
         $this->connection->beginTransaction();
     }
 
+    /**
+     *
+     */
     public function __destruct()
     {
         $this->connection->rollBack();
+        $this->coverage->stop();
+
+        $writer = new Clover;
+        $writer->process($this->coverage, ROOT . DS . "coverage.xml");
+
+        $writer = new Facade();
+        $writer->process($this->coverage, ROOT . DS . "code-coverage-report");
     }
 
     /**
