@@ -1,0 +1,25 @@
+{
+  "name": "beeblebrox3/testing-behat-unit",
+  "minimum-stability": "stable",
+  "authors": [
+    {
+      "name": "Luís Henrique Faria",
+      "email": "luish.faria@gmail.com"
+    }
+  ],
+  "require": {
+    "illuminate/database": "5.*",
+    "illuminate/pagination": "5.*",
+    "aura/session": "*",
+    "respect/rest": "0.6.*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "*",
+    "behat/behat": "^3.2"
+  },
+  "autoload": {
+    "psr-0": {
+      "App\\": "app"
+    }
+  }
+}
