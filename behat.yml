@@ -1,1 +1,6 @@
-defaut:
+default:
+  suites:
+    default:
+      contexts:
+        - FeatureContext
+        - EventsContext
